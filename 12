@@ -1,0 +1,68 @@
+#include<iostream>
+
+using namespace std;
+
+
+char map[100][100];
+
+bool ispali(int x, int y, int end, int type) {
+	if (end >= 100) return false;
+	if (type == 1) { //가로로 보는거 12345 len = 5  i=1    map[0][3]  =C  map[0][5-3+1]
+		int len = (end - y + 1); //1 3	123  len=3, i=1, i<1;i++  map[0][1] = C, map[0][3-1+1]=map[0][1]	
+		for (int i = 0; i < len/2; i++) {
+			if (map[x][y+i] != map[x][end-i]) return false;
+
+		}
+	}
+	else {
+		int len = (end - x + 1);
+		for (int i = 0; i < len/2; i++) {
+			if (map[x+i][y] != map[end-i][y]) return false;
+		}
+	}
+	return true;
+}
+
+
+int main(int argc, char** argv)
+{
+	int T = 10;
+	for (int i = 1; i <= T; i++)
+	{
+		int num;
+		string input;
+		cin >> num;
+		int con = 0;
+		for (int j = 0; j < 100; j++) {
+			cin >> input;
+			for (int k = 0; k < 100; k++) {
+				map[j][k] = input[k];
+			}
+		}
+		int Max = 1;
+		for (int size = 2; size <= 100; size++) {
+			for (int j = 0; j < 100; j++) { //가로로 다 보는 경우
+				for (int k = 0; k <= 100 - size; k++) {
+					if (ispali(j, k, k + size - 1, 1)) {//회문이면
+						Max = size;
+						
+						
+					}
+				}
+			}
+		}
+		for (int size = 2; size <= 100; size++) {
+			for (int k = 0; k < 100; k++) { //세로로 다 보는 경우
+				for (int j = 0; j <= 100 - size; j++) {
+					if (ispali(j, k, j + size - 1, 2)) {//회문이면
+						Max = size;
+					}
+				}
+			}
+		}
+		
+		cout << "#" << num << ' ' << Max << endl;
+
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
