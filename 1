@@ -1,0 +1,57 @@
+#include<iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+int main(int argc, char** argv)
+{
+	int T = 10;
+
+	for (int t = 1; t <= T; t++)
+	{
+		int n=1, c;
+		cin >> n;
+		vector<int> input(n);
+		for (int i = 0; i < n; i++) {
+			cin >> input[i];
+		}
+		cin >> c;
+		char in;
+		while (c > 0) {
+			cin >> in;
+			if (in == 'I') {
+				int x, y;
+				cin >> x >> y;
+				vector<int> temp(y);
+				for (int i = 0; i < y; i++) {
+					cin >> temp[i];
+				}
+				input.insert(input.begin() + x, temp.begin(),temp.end());
+				c--;
+			}
+			else if (in == 'D') {
+				int x, y;
+				cin >> x >> y;
+				input.erase(input.begin() + x, input.begin() + x + y);
+				c--;
+			}
+			else if (in == 'A') {
+				int y;
+				cin >> y;
+				for (int i = 0; i < y; i++) {
+					int tp;
+					cin >> tp;
+					input.push_back(tp);
+				}
+				c--;
+			}
+		}
+		cout << "#" << t << " ";
+		for (int i = 0; i < 10; i++) {
+			cout << input[i] << " ";
+		}
+		cout << endl;
+		
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
