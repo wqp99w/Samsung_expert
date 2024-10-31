@@ -1,0 +1,30 @@
+#include<iostream>
+#include <string>
+using namespace std;
+
+string check(string input) {
+	for (int i = 0; i < input.size()-1; i++) {
+		if (input[i] == input[i + 1]) { //같은게 붙어 있으면 두개 제거
+			input.erase(i, 2);
+			if (i == 0) i -= 1;
+			else i -= 2;
+		}
+	}
+	return input;
+}
+
+int main(int argc, char** argv)
+{
+	int T=10;
+	/*
+	   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
+	*/
+	for (int t= 1; t <= T; t++)
+	{
+		string input;
+		cin >> input >> input;
+		cout << "#" << t << " " << check(input) << endl;
+
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
