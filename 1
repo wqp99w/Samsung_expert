@@ -1,0 +1,76 @@
+#include<iostream>
+#include<map>
+#include <string>
+using namespace std;
+
+map<string, int> in;
+
+char Map[51][101];
+
+int isam(int i, int start, int end) {
+	string temp = "";
+	for (int k = start; k <= end; k++) {
+		temp += Map[i][k];
+	}
+	if (in.find(temp) != in.end()) { //해당 코드가 존재한다면
+		return in[temp];
+	}
+	return -1; //코드 없으면 -1 반환
+}
+
+int calc(int n, int m) {
+	int sum = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = m - 1; j >= 0; j--) {
+			if (Map[i][j] == '1') { //1로 모든 암호가 끝나니까 맨뒤부터 1찾고, 1찾으면 여기서 바꾸기
+				int start = j - 55, end = j;
+				int temp = 0, con = 1, even = 0, odd = 0;
+				while (start < end) {
+					int t = isam(i, start, start + 6);
+					if (con % 2 != 0) odd += t;
+					else even += t;
+					temp += t;
+					start += 7;
+					con++;
+				}
+				int sig = odd * 3 + even;
+				if (sig % 10 == 0) return temp;
+				else return 0;
+
+			}
+		}
+	}
+}
+
+int main(int argc, char** argv)
+{
+	int T;
+	cin >> T;
+	in["0001101"] = 0;
+	in["0011001"] = 1;
+	in["0010011"] = 2;
+	in["0111101"] = 3;
+	in["0100011"] = 4;
+	in["0110001"] = 5;
+	in["0101111"] = 6;
+	in["0111011"] = 7;
+	in["0110111"] = 8;
+	in["0001011"] = 9;
+
+	for (int t = 1; t <= T; t++) {
+		int n, m;
+		string input;
+		cin >> n >> m;
+		for (int i = 0; i < n; i++) {
+			cin >> input;
+			for (int j = 0; j < m; j++) {
+				Map[i][j] = input[j];
+			}
+		}
+		cout << "#" << t << " " << calc(n, m) << endl;
+
+
+	}
+
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
