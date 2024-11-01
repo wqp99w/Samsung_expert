@@ -1,0 +1,48 @@
+#include<iostream>
+#include <string>
+using namespace std;
+
+char map[8][8];
+
+bool pali(int len, string input) {
+	for (int i = 0; i < len / 2; i++) {
+		if (input[i] != input[len - 1 - i]) return false;
+	}
+	return true;
+}
+
+int main(int argc, char** argv)
+{
+	int T=10;
+	for (int t = 1; t <= T; t++)
+	{
+		int len;
+		cin >> len;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				cin >> map[i][j];
+			}
+		}
+		int con = 0;
+		for (int i = 0; i < 8; i++) { //가로 확인
+			for (int j = 0; j <= 8 - len; j++) {
+				string input = "";
+				for (int k = j; k < j+len; k++) {
+					input += map[i][k];
+				}
+				if (pali(len, input)) con++;
+			}
+		}
+		for (int j = 0; j < 8; j++) {
+			for (int i = 0; i <= 8 - len; i++) {
+				string input = "";
+				for (int k = i; k < i + len; k++) {
+					input += map[k][j];
+				}
+				if (pali(len, input)) con++;
+			}
+		}
+		cout << "#" << t << " " << con << endl;
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
