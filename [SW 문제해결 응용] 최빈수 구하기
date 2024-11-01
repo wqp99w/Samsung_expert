@@ -1,0 +1,33 @@
+#include<iostream>
+#include <vector>
+#include <map>
+using namespace std;
+
+
+
+int main(int argc, char** argv)
+{
+	int T;
+	cin >> T;
+	for (int t = 1; t <= T; t++)
+	{
+		int num;
+		cin >> num;
+		map<int, int> input;
+		for (int i = 0; i < 1000; i++) {
+			int in;
+			cin >> in;
+			input[in]++;
+		}
+		int Max = 0, out=0;
+		for (auto c : input) {
+			if (Max <= c.second) {
+				Max = c.second;
+				out = max(out,c.first);
+			}
+		}
+		cout << "#" << t << " " <<out<< endl;
+
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
