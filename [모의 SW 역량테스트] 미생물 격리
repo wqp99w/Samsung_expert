@@ -1,0 +1,103 @@
+#include<iostream>
+#include <queue>
+#include <map>
+using namespace std;
+
+int dx[5] = { 0,-1,1,0,0 };
+int dy[5] = { 0,0,0,-1,1 };
+
+struct micro {
+	int x;
+	int y;
+	int now;
+	int dir;
+};
+
+
+//좌표로 구분한다하면 x,y에 1,2,3번 군집이 있다 -> 이 군집들을 합친다. 
+//벡터로 각 군집들 번호 매기고 관리하는건 맞음
+//
+
+void move(map<pair<int, int>, queue<int>> &Map, vector<micro> &mic, int n) {
+	map<pair<int, int>, queue<int>> temp;
+	for (auto c : Map) { //이동
+		while (!c.second.empty()) {
+			micro tp = mic[c.second.front()];
+			tp.x = tp.x + dx[tp.dir];
+			tp.y = tp.y + dy[tp.dir];
+			if (0 == tp.x|| tp.x == n-1 || tp.y== 0 || tp.y== n-1) { //벽에 부딪히면 방향 반대로
+				switch (tp.dir) {
+				case(1):
+					tp.dir = 2;
+					break;
+				case(2):
+					tp.dir = 1;
+					break;
+				case(3):
+					tp.dir = 4;
+					break;
+				case(4):
+					tp.dir = 3;
+					break;
+				default:
+					break;
+				}
+				tp.now = tp.now / 2;
+			}
+			mic[c.second.front()] = tp;
+			temp[{tp.x, tp.y}].push(c.second.front());
+			c.second.pop();
+		}
+	}
+	//이동 끝나면
+	for (auto &c : temp) {
+		if (c.second.size() >= 2) { //같은 칸에 군집 2개 이상이면 합치기
+			int sum = 0, Max=0, index=-1;
+			while (!c.second.empty()) {
+				micro tp = mic[c.second.front()];
+				if (Max < tp.now) { //가장 군집 큰거 비교
+					Max = tp.now;
+					index = c.second.front();
+				}
+				sum += tp.now;
+				c.second.pop();
+			}
+			mic[index].now = sum;
+			c.second.push(index);
+		}
+	}
+	Map = temp;
+}
+
+int main(int argc, char** argv)
+{
+	int T;
+	cin >> T;
+	for (int t=1;t<=T;t++)
+	{
+		int n, m, k;
+		map<pair<int, int>, queue<int>> Map;
+		cin >> n >> m >> k;
+		vector<micro> mic(k+1);
+		for(int i=1;i<=k;i++){
+			micro in;
+			cin >> in.x >> in.y >> in.now >> in.dir;
+			mic[i] = in;
+			Map[{in.x, in.y}].push(i);
+		}
+		while (0 < m--) {
+			move(Map, mic, n);
+		}
+		int sum = 0;
+		for (auto c : Map) {
+			while (!c.second.empty()) {
+				micro tp = mic[c.second.front()];
+				c.second.pop();
+				sum += tp.now;
+			}
+		}
+		cout << "#" << t << " " << sum << endl;
+
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
