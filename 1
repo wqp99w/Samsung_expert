@@ -1,0 +1,27 @@
+#include<iostream>
+
+using namespace std;
+
+int Pow(int a, int r) {
+	if (r == 0) return 1;
+	if (r % 2 == 0) {
+		return Pow(a, r / 2) * Pow(a, r / 2);
+	}
+	else {
+		return a * Pow(a, (r - 1) / 2) * Pow(a, (r - 1) / 2);
+	}
+}
+
+int main(int argc, char** argv)
+{
+	int T=10;
+	for (int t = 1; t <= T; t++)
+	{
+		int num;
+		cin >> num;
+		int a, r;
+		cin >> a >> r;
+		cout << "#" << num << " " << Pow(a, r) << endl;
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
