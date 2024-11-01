@@ -1,0 +1,38 @@
+#include<iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+
+int check(int x,vector<int> input) {
+	int m = 0;
+	for (int i = 1; i <= 2; i++) { //좌우 2개 중에서 가장 높은 건물 찾으면 그 건물 층수까지는 조망권이 확보 안됨
+		m = max(m, input[x - i]);
+		m = max(m, input[x + i]);
+	}
+	if (input[x] <= m) return 0; //좌우 건물보다 건물 작거나 같으면 해당 건물에서는 조망권 확보 못함
+	return input[x] - m;
+}
+
+int main(int argc, char** argv)
+{
+	int T=10;
+
+	for (int t = 1; t <= T; t++)
+	{
+		int N;
+		cin >> N;
+		vector<int> input(N);
+		for (int i = 0; i < N; i++) {
+			cin >> input[i];
+		}
+		int con = 0;
+		for (int i = 0; i < N; i++) {
+			if (input[i] != 0) con += check(i, input);
+		}
+		cout << "#" << t << " " <<con<< endl;
+
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
