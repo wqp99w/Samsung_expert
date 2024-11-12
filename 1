@@ -1,0 +1,72 @@
+#include<iostream>
+#include <queue>
+#include <set>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+struct cell {
+	int x;
+	int y;
+	int time;
+	int now;
+};
+
+
+int main(int argc, char** argv)
+{
+	int T;
+	cin >> T;
+	for (int t = 1; t <= T; t++)
+	{
+		queue<cell> que;
+		vector<int> tt(650, 0);
+		vector<vector<int>> visited(650, tt);
+		int n, m, k;
+		cin >> n >> m >> k;
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= m; j++) {
+				int in;
+				cin >> in;
+				if (in > 0) {
+					que.push({ i,j,in,-in });
+					visited[300 + i][300 + j] = 1;
+				}
+			}
+		}
+		while (k--) {
+			map<pair<int, int>, cell> child;
+			int con = que.size();
+			while (con--) {
+				cell tp = que.front();
+				que.pop();
+				tp.now++; //시간 1초 지났음.
+				if (tp.now == 1) {//활성화되고 1초 지나면 번식 
+					for (int i = 0; i < 4; i++) {
+						int nx = tp.x + dx[i];
+						int ny = tp.y + dy[i];
+						if (visited[300+nx][300+ny]==0) { //죽은 세포가 아니라면 child에 넣기
+							if (child.find({ nx,ny }) != child.end()) { //번식 하려는데 이미 번식 해놓은 놈이 있다면 생명력 큰거로 대체
+								if (child[{nx, ny}].time < tp.time) child[{nx, ny}] = { nx,ny,tp.time,-tp.time };
+							}
+							else child[{nx, ny}] = { nx,ny,tp.time,-tp.time };
+						}
+					}
+				}
+				if (tp.now < tp.time) {
+					que.push(tp);
+				}
+			}
+			for (auto& c : child) {
+				que.push(c.second);
+				visited[300 + c.first.first][300 + c.first.second] = 1;
+			}
+		}
+		cout << "#" << t << " " << que.size() << endl;
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
