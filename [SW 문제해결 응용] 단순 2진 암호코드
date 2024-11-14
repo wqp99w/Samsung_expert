@@ -74,3 +74,82 @@ int main(int argc, char** argv)
 
 	return 0;//정상종료시 반드시 0을 리턴해야합니다.
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///벡터 스트링 쓴 버전
+#include<iostream>
+#include<map>
+#include <string>
+#include <vector>
+using namespace std;
+map<string, int> input;
+//11 12 13 14 15 16 17
+//18  -55
+
+
+int check(vector<string>& in) {
+	for (int i = 0; i < in.size(); i++) {
+		for (int j = in[0].size() - 1; j >= 55; j--) {
+			if (in[i][j] == '1') { //암호문 끝자리
+				int odd = 0, even = 0;
+				for (int t = 8; t >= 1; t--) { //0 55   35    41 42     48  49 50 51 52 53 54 55 
+					string tp = in[i].substr((j - 7 * t)+1, 7);
+					if (t % 2 == 0) { // 홀수자리일때
+						odd += input[tp];
+					}
+					else {
+						even += input[tp];
+					}
+				}
+				if ((odd * 3 + even) % 10 == 0) return odd + even;
+				else return 0;
+			}
+		}
+	}
+}
+
+int main(int argc, char** argv)
+{
+	int test_case;
+	int T;
+	cin >> T;
+	input["0001101"] = 0;
+	input["0011001"] = 1;
+	input["0010011"] = 2;
+	input["0111101"] = 3;
+	input["0100011"] = 4;
+	input["0110001"] = 5;
+	input["0101111"] = 6;
+	input["0111011"] = 7;
+	input["0110111"] = 8;
+	input["0001011"] = 9;
+
+	for (int t = 1; t <= T; t++)
+	{
+		int n, m;
+		cin >> n >> m;
+		vector<string> in;
+		string tp;
+		for (int i = 0; i < n; i++) {
+			cin >> tp;
+			in.push_back(tp);
+		}
+		cout << "#" << t << " " << check(in) << endl;
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
