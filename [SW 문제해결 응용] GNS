@@ -1,56 +1,49 @@
 #include<iostream>
-#include<vector>
+#include <map>
 #include<string>
-#include<map>
-#include<algorithm>
-
+#include <algorithm>
+#include <vector>
 using namespace std;
 
-map<string, int> com;
+map<string, int> trans;
 
 bool compare(string x, string y) {
-	if (com[x] < com[y]) return true;
+	if (trans[x] < trans[y]) return true;
 	return false;
 }
 
 int main(int argc, char** argv)
 {
-	int T;
-	com["ZRO"] = 0;
-	com["ONE"] = 1;
-	com["TWO"] = 2;
-	com["THR"] = 3;
-	com["FOR"] = 4;
-	com["FIV"] = 5;
-	com["SIX"] = 6;
-	com["SVN"] = 7;
-	com["EGT"] = 8;
-	com["NIN"] = 9;
+	trans["ZRO"] = 0;
+	trans["ONE"] = 1;
+	trans["TWO"] = 2;
+	trans["THR"] = 3;
+	trans["FOR"] = 4;
+	trans["FIV"] = 5;
+	trans["SIX"] = 6;
+	trans["SVN"] = 7;
+	trans["EGT"] = 8;
+	trans["NIN"] = 9;
 
+	int test_case;
+	int T;
 	cin >> T;
-	for (int i = 1; i <= T; i++)
+
+	for (test_case = 1; test_case <= T; ++test_case)
 	{
-		string input;
-		int n;
-		cin >> input >> n;
-		getline(cin, input);
-		getline(cin, input);
-		vector<string> in;
-		for (int j = 0; j < input.size(); j++) {
-			int next = input.find(' ',j);
-			if (next == -1) {
-				in.push_back(input.substr(j));
-				break;
-			}
-			in.push_back(input.substr(j, next - j));
-			j = next;
+		string num;
+		int con;
+		cin >> num >> con;
+		vector<string> input(con);
+		for (int i = 0; i < con; i++) {
+			cin >> input[i];
 		}
-		sort(in.begin(), in.end(), compare);
-		cout << "#" << i << endl;
-		for (int i = 0; i < in.size(); i++) {
-			cout << in[i] << ' ';
-		}
+		sort(input.begin(), input.end(), compare);
+		cout << num << endl;
+		for (auto c : input)
+			cout << c << " ";
 		cout << endl;
+
 	}
 	return 0;//정상종료시 반드시 0을 리턴해야합니다.
 }
