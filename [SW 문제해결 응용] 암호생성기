@@ -1,56 +1,42 @@
 #include<iostream>
-#include <vector>
-#include <queue>
+#include<vector>
+
 using namespace std;
 
-
-bool cycle(vector<int> &input) {
-	queue<int> que1, que2;
-	for (auto c : input) que1.push(c);
-	int i = 1,check=0;
-	while (i<=5) {
-		int temp = que1.front()-i;
-		que1.pop();
-		if (temp > 0) {
-			que2.push(temp);
+void cycle(vector<int>& input) {
+	while (1) {
+		for (int i = 1; i <= 5; i++) {
+			int tp = input[0];
+			tp -= i;
+			if (tp > 0) {
+				input.push_back(tp);
+				input.erase(input.begin(), input.begin() + 1);
+			}
+			else {
+				input.push_back(0);
+				input.erase(input.begin(), input.begin() + 1);
+				return;
+			}
 		}
-		else {
-			que2.push(0);
-			check = 1;
-			break;
-		}
-		i++;
 	}
-	int index = 0;
-	while (!que1.empty()) {
-		input[index++] = que1.front();
-		que1.pop();
-	}
-	while (!que2.empty()) {
-		input[index++] = que2.front();
-		que2.pop();
-	}
-	if (check == 0) return true;
-	return false;
 }
 
 int main(int argc, char** argv)
 {
 	int T=10;
 
-	for (int t = 1; t <= T; t++)
+	for (int test_case = 1; test_case <= T; ++test_case)
 	{
-		vector<int> input(8);
 		int num;
 		cin >> num;
-		for (int i = 0; i < 8; i++) {
+		vector<int> input(8);
+		for (int i = 0; i < 8; i++)
 			cin >> input[i];
-		}
-		while (cycle(input));
+		cycle(input);
 		cout << "#" << num << " ";
-		for (auto c : input) cout << c << " ";
+		for (auto c : input)
+			cout << c << " ";
 		cout << endl;
-		
 	}
 	return 0;//정상종료시 반드시 0을 리턴해야합니다.
 }
