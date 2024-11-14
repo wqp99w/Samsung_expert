@@ -1,41 +1,38 @@
 #include<iostream>
 #include <vector>
-#include <string>
+
 using namespace std;
 
 int main(int argc, char** argv)
 {
 	int T = 10;
-
-	for (int t = 1; t <= T; t++)
+	for (int test_case = 1; test_case <= T; ++test_case)
 	{
-		int n=1, c;
-		cin >> n;
-		vector<int> input(n);
-		for (int i = 0; i < n; i++) {
+		int num;
+		cin >> num;
+		vector<int> input(num);
+		for (int i = 0; i < num; i++) {
 			cin >> input[i];
 		}
-		cin >> c;
-		char in;
-		while (c > 0) {
-			cin >> in;
-			if (in == 'I') {
+		cin >> num;
+		while (num--) {
+			char op;
+			cin >> op;
+			if (op == 'I') {
 				int x, y;
 				cin >> x >> y;
-				vector<int> temp(y);
+				vector<int> s(y);
 				for (int i = 0; i < y; i++) {
-					cin >> temp[i];
+					cin >> s[i];
 				}
-				input.insert(input.begin() + x, temp.begin(),temp.end());
-				c--;
+				input.insert(input.begin() + x, s.begin(),s.end());
 			}
-			else if (in == 'D') {
+			else if (op == 'D') {
 				int x, y;
 				cin >> x >> y;
 				input.erase(input.begin() + x, input.begin() + x + y);
-				c--;
 			}
-			else if (in == 'A') {
+			else {
 				int y;
 				cin >> y;
 				for (int i = 0; i < y; i++) {
@@ -43,15 +40,13 @@ int main(int argc, char** argv)
 					cin >> tp;
 					input.push_back(tp);
 				}
-				c--;
 			}
 		}
-		cout << "#" << t << " ";
+		cout << "#" << test_case << " ";
 		for (int i = 0; i < 10; i++) {
 			cout << input[i] << " ";
 		}
 		cout << endl;
-		
 	}
 	return 0;//정상종료시 반드시 0을 리턴해야합니다.
 }
