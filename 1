@@ -1,0 +1,49 @@
+#include<iostream>
+#include <string>
+#include <set>
+using namespace std;
+
+int map[4][4];
+int dx[4] = { 1,-1,0,0 };
+int dy[4] = { 0,0,1,-1 };
+
+
+
+void dfs(string now, int x, int y, set<string> &save) {
+	if (now.size() == 7) {
+		save.insert((now));
+	}
+	else {
+		for (int i = 0; i < 4; i++) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+
+			if (nx >= 4 || nx < 0 || ny >= 4 || ny < 0) continue;
+			dfs(now + to_string(map[nx][ny]), nx, ny, save);
+		}
+	}
+}
+
+int main(int argc, char** argv)
+{
+	int test_case;
+	int T;
+	cin >> T;
+	for (test_case = 1; test_case <= T; ++test_case)
+	{
+		set<string> save;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				cin >> map[i][j];
+			}
+		}
+		
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				dfs(to_string(map[i][j]), i, j, save);
+			}
+		}
+		cout << "#" << test_case << " " << save.size() << endl;
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
