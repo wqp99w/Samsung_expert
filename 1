@@ -1,0 +1,56 @@
+#include<iostream>
+#include <string>
+using namespace std;
+
+
+int map[49][49];
+
+int count(int n) {
+	//n/2까지 점점 늘어나면서 추가
+// n/2 이후부터는 점점 줄어가면서 추가
+	int start = n / 2; //가운데부터 시작
+	int con = 0;
+	for (int i = 0; i < n / 2; i++) { //윗 부분
+		//2(i+1)-1
+		for (int j = 0; j < 2 * (i + 1) - 1; j++) {
+			con += map[i][start+j];
+		}
+		start -= 1;
+	}
+	start = n / 2;
+	int j = 1;
+	for (int i = n - 1; i > n / 2; i--) {//아래부분
+		for (int t = 0; t < j; t++) {
+			con += map[i][start + t];
+		}
+		start -= 1;
+		j += 2;
+	}
+	for (int i = 0; i < n; i++) {
+		con += map[n / 2][i];
+	}
+	return con;
+}
+
+int main(int argc, char** argv)
+{
+	int test_case;
+	int T;
+	cin >> T;
+
+	for (test_case = 1; test_case <= T; ++test_case)
+	{
+		int n;
+		cin >> n;
+		for (int i = 0; i < n; i++) {
+			string in;
+			cin >> in;
+			for (int j = 0; j < n; j++) {
+				map[i][j] = (in[j] - '0');
+			}
+		}
+		cout << "#" << test_case << " " << count(n) << endl;
+
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
