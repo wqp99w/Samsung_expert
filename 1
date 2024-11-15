@@ -1,0 +1,59 @@
+#include<iostream>
+
+using namespace std;
+
+int map[11][11];
+
+int dx[4] = { 0,1,0,-1 };
+int dy[4] = { 1,0,-1,0 };
+
+void snail(int n) {
+	//방향 상하좌우로 해서 처음은 우로 가다가 숫자나 벽 만나면 우->하 , 하로 가다가 숫자나 벽 만나면 하->좌
+	//좌로 가다가 숫자나 벽 만나면 좌->상, 상으로 가다가 숫자나 벽 만나면 상-> 우
+	int dir = 0;
+	int con = 0;
+	int x = 1, y = 0;
+	while (con < n * n) {
+		int nx = x + dx[dir];
+		int ny = y + dy[dir];
+		if (nx > n || nx<1 || ny>n || ny < 1 || map[nx][ny] != 0) { //범위 벗어나거나 숫자 있으면 방향 바꾸기
+			dir = (dir + 1) % 4;
+			continue;
+		}
+		//아니면 나아가기
+		map[nx][ny] = ++con;
+		x = nx;
+		y = ny;
+	}
+}
+
+ 
+int main(int argc, char** argv)
+{
+	int test_case;
+	int T;
+	cin >> T;
+	/*
+	   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
+	*/
+	for (test_case = 1; test_case <= T; ++test_case)
+	{
+		int n;
+		cin >> n;
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				map[i][j] = 0;
+			}
+		}
+		snail(n);
+		cout << "#" << test_case << endl;
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				cout << map[i][j] << " ";
+			}
+			cout << endl;
+		}	
+
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
