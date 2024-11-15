@@ -1,103 +1,101 @@
 #include<iostream>
-#include <queue>
 #include <map>
+#include <queue>
 using namespace std;
+
+
+struct cell {
+	int x;
+	int y;
+	int size;
+	int dir; //상하좌우 1234
+};
+
+struct compare {
+	bool operator()(const cell& x, const cell& y) {
+		return x.size < y.size; //a가 y보다 크면 true니까  a가 더 낮은 우선순위라는 말 
+	}
+};
 
 int dx[5] = { 0,-1,1,0,0 };
 int dy[5] = { 0,0,0,-1,1 };
 
-struct micro {
-	int x;
-	int y;
-	int now;
-	int dir;
-};
-
-
-//좌표로 구분한다하면 x,y에 1,2,3번 군집이 있다 -> 이 군집들을 합친다. 
-//벡터로 각 군집들 번호 매기고 관리하는건 맞음
-//
-
-void move(map<pair<int, int>, queue<int>> &Map, vector<micro> &mic, int n) {
-	map<pair<int, int>, queue<int>> temp;
-	for (auto c : Map) { //이동
-		while (!c.second.empty()) {
-			micro tp = mic[c.second.front()];
-			tp.x = tp.x + dx[tp.dir];
-			tp.y = tp.y + dy[tp.dir];
-			if (0 == tp.x|| tp.x == n-1 || tp.y== 0 || tp.y== n-1) { //벽에 부딪히면 방향 반대로
-				switch (tp.dir) {
-				case(1):
-					tp.dir = 2;
-					break;
-				case(2):
-					tp.dir = 1;
-					break;
-				case(3):
-					tp.dir = 4;
-					break;
-				case(4):
-					tp.dir = 3;
-					break;
-				default:
-					break;
-				}
-				tp.now = tp.now / 2;
-			}
-			mic[c.second.front()] = tp;
-			temp[{tp.x, tp.y}].push(c.second.front());
-			c.second.pop();
-		}
+void change(int& dir) {
+	switch (dir)
+	{
+	case 1:
+		dir = 2;
+		break;
+	case 2:
+		dir = 1;
+		break;
+	case 3:
+		dir = 4;
+		break;
+	case 4:
+		dir = 3;
+		break;
+	default:
+		break;
 	}
-	//이동 끝나면
-	for (auto &c : temp) {
-		if (c.second.size() >= 2) { //같은 칸에 군집 2개 이상이면 합치기
-			int sum = 0, Max=0, index=-1;
-			while (!c.second.empty()) {
-				micro tp = mic[c.second.front()];
-				if (Max < tp.now) { //가장 군집 큰거 비교
-					Max = tp.now;
-					index = c.second.front();
-				}
-				sum += tp.now;
-				c.second.pop();
-			}
-			mic[index].now = sum;
-			c.second.push(index);
-		}
-	}
-	Map = temp;
 }
+
 
 int main(int argc, char** argv)
 {
+	int test_case;
 	int T;
+
 	cin >> T;
-	for (int t=1;t<=T;t++)
+	
+	for (test_case = 1; test_case <= T; ++test_case)
 	{
 		int n, m, k;
-		map<pair<int, int>, queue<int>> Map;
 		cin >> n >> m >> k;
-		vector<micro> mic(k+1);
-		for(int i=1;i<=k;i++){
-			micro in;
-			cin >> in.x >> in.y >> in.now >> in.dir;
-			mic[i] = in;
-			Map[{in.x, in.y}].push(i);
+		//n은 맵 크기, m은 몇초 있을지, k는 처음 미생물 개수
+		map < pair<int, int>, priority_queue<cell, vector<cell>, compare>> save;
+		for (int i = 0; i < k; i++) {
+			int x, y, size, dir;
+			cin >> x >> y >> size >> dir;
+			save[{x, y}].push({ x,y,size,dir });
 		}
-		while (0 < m--) {
-			move(Map, mic, n);
-		}
-		int sum = 0;
-		for (auto c : Map) {
-			while (!c.second.empty()) {
-				micro tp = mic[c.second.front()];
-				c.second.pop();
-				sum += tp.now;
+		
+		while (m--) {
+			map < pair<int, int>, priority_queue<cell, vector<cell>, compare>> temp;
+			for (auto& c : save) {
+				while (!c.second.empty()) {
+					cell tp = c.second.top();
+					int nowx = tp.x, nowy = tp.y;
+					int nx = nowx + dx[tp.dir];
+					int ny = nowy + dy[tp.dir];
+					if (nx == 0 || nx == n - 1 || ny == 0 || ny == n - 1) { //빨간 구역에 들가면
+						tp.size /= 2;
+						change(tp.dir);
+					}
+					tp.x = nx;
+					tp.y = ny;
+					c.second.pop();
+					if(tp.size>0)
+						temp[{tp.x, tp.y}].push(tp);
+				}
 			}
-		}
-		cout << "#" << t << " " << sum << endl;
+			for (auto& c : temp) {
+				int sum = 0;
+				int dir = c.second.top().dir;
+				while (!c.second.empty()) {
+					sum+= c.second.top().size;
+					c.second.pop();
+				}
+				temp[c.first] .push( { c.first.first, c.first.second, sum, dir });
+			}
+			save = temp;
 
+		}
+		int out = 0;
+		for (auto c : save) {
+			out += c.second.top().size;
+		}
+		cout << "#" << test_case << " " << out << endl;
 	}
 	return 0;//정상종료시 반드시 0을 리턴해야합니다.
 }
