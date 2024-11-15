@@ -1,0 +1,61 @@
+#include<iostream>
+#include <string>
+using namespace std;
+
+char map[51][51];
+
+int Min = 51 * 51*2;
+
+void count(int w, int r, int n, int m){
+	//흰색
+	int con = 0;
+	for (int i = 0; i < w; i++) {
+		for (int j = 0; j < m; j++) {
+			if (map[i][j] != 'W') con++;
+		}
+	}
+	//파란색
+	for (int i = w; i < w+r; i++) {
+		for (int j = 0; j < m; j++) {
+			if (map[i][j] != 'B') con++;
+		}
+	}
+  //빨간색
+	for (int i = w+r; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			if (map[i][j] != 'R') con++;
+		}
+	}
+	Min = min(Min, con);
+}
+
+int main(int argc, char** argv)
+{
+	int test_case;
+	int T;
+	cin >> T;
+	for (test_case = 1; test_case <= T; ++test_case)
+	{
+		int n, m;
+		cin >> n >> m;
+		for (int i = 0; i < n; i++) {
+			string input;
+			cin >> input;
+			for (int j = 0; j < m; j++) {
+				map[i][j] = input[j];
+			}
+		}
+
+		//흰색 몇개, 빨간색 몇개, 파란색 나머지
+		//흰색 범위는 1부터 n-2까지 2개는 다른 칠해야 하니까
+		//빨간색 범위는 n-흰색개수-1, 최소 1개는 파란색
+		Min = 51 * 51 * 2;
+		for (int i = 1; i <= n - 2; i++) { //흰색이 1개부터 n-2개까지 가능
+			for (int j = 1; j <= n - i - 1; j++) { //빨간색은 1개부터 
+				count(i, j, n, m);
+			}
+		}
+		cout << "#" << test_case << " " << Min << endl;
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
