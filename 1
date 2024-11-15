@@ -1,0 +1,75 @@
+#include<iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+
+
+void spin(vector<vector<int>>& map, int n) {
+	//90도면 i,j가   0,0 0,1 0,2  ->   0,2  1,2  2,2
+	//1,0 1,1 1,2 -> 0,1 1,1 2,1
+	vector<vector<int>> temp = map;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			temp[j][n - i - 1] = map[i][j];
+		}
+	}
+	map = temp;
+	
+}
+
+void spin_print(vector<vector<int>> &map, int n) {
+	vector<string> output(n,"");
+	spin(map, n);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			output[i] += ('0' + map[i][j]);
+		}
+		output[i] += ' ';
+	}
+
+	spin(map, n);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			output[i] += ('0' + map[i][j]);
+		}
+		output[i] += ' ';
+	}
+
+	spin(map, n);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			output[i] += ('0' + map[i][j]);
+		}
+		output[i] += ' ';
+	}
+
+
+	for (auto c : output) {
+		cout << c << endl;
+	}
+}
+
+int main(int argc, char** argv)
+{
+	int test_case;
+	int T;
+
+	cin >> T;
+	for (test_case = 1; test_case <= T; ++test_case)
+	{
+		int n;
+		cin >> n;
+		vector<int> tp(n, 0);
+		vector<vector<int>> map(n,tp);
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				cin >> map[i][j];
+			}
+		}
+		cout << "#" << test_case << endl;
+		spin_print(map, n);
+
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
