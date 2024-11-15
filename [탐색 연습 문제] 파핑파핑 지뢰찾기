@@ -1,0 +1,101 @@
+#include<queue>
+#include<iostream>
+#include <string>
+using namespace std;
+
+char map[300][300];
+int visited[300][300];
+int num[300][300];
+
+int dx[8] = { -1,1,0,0,-1,-1,1,1 };
+int dy[8] = { 0,0,-1,1,-1,1,1,-1 };
+
+int out = 0;
+
+//0인걸 다 누르고 나머지는 직접 눌러야 하니까 세는거
+//먼저 각 자리의 숫자를 매긴다. 그 후 0인놈 먼저 눌러서 연쇄로 터지는거 확인한다. 남아있는 0이 없다면 남아있는 숫자들을 센다.
+/*
+. . * . .
+. . * . .
+. * . . *
+. * . . .
+. * . . .
+*/
+
+void count(int n) { //숫자 매기기
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (map[i][j] == '.') { //지뢰가 아니라면
+				int con = 0;
+				for (int k = 0; k < 8; k++) {
+					int nx = i + dx[k];
+					int ny = j + dy[k];
+					if (nx >= n || nx < 0 || ny >= n || ny < 0) continue;
+					if (map[nx][ny] == '*') con++; //지뢰 발견하면 1증가
+				}
+				num[i][j] = con;
+			}
+		}
+	}
+}
+
+void zero(int n, int x, int y) {
+	queue<pair<int, int>> check;
+	check.push({ x, y });
+	while (!check.empty()) {
+		int nowx = check.front().first, nowy = check.front().second;
+		check.pop();
+		visited[nowx][nowy] = 1;
+		for (int k = 0; k < 8; k++) {
+			int nx = nowx + dx[k];
+			int ny = nowy + dy[k];
+			if (nx >= n || nx < 0 || ny >= n || ny < 0||visited[nx][ny]==1) continue;
+			if (num[nx][ny] == 0) {
+				check.push({ nx,ny });
+			}
+			visited[nx][ny] = 1;
+		}
+	}
+}
+
+int main(int argc, char** argv)
+{
+	int test_case;
+	int T;
+	cin >> T;
+	for (test_case = 1; test_case <= T; ++test_case)
+	{
+		int n;
+		cin >> n;
+		out = 0;
+		for (int i = 0; i < n; i++) {
+			string input;
+			cin >> input;
+			for (int j = 0; j < n; j++) {
+				map[i][j] = input[j];
+				visited[i][j] = 0;
+			}
+		}
+		count(n);
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (map[i][j] == '.' && visited[i][j] == 0 && num[i][j] == 0) { //지뢰가 아니고, 아직 안눌렀고, 0인 위치를 누르면 연쇄
+					out++;
+					zero(n, i, j);
+				}
+			}
+		}
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (map[i][j] == '.' && visited[i][j] == 0) { //지뢰가 아니고, 아직 안눌렀고, 0인 위치를 누르면 연쇄
+					out++;
+					visited[i][j] = 1;
+				}
+			}
+		}
+		cout << "#" << test_case << " " << out << endl;
+	}
+	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+}
